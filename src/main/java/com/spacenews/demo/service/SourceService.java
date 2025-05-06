@@ -7,7 +7,7 @@ public interface SourceService {
 
     SourceResponse getSources();
     SourceDTO addSource(SourceDTO sourceDTO);
-    SourceResponse updateSource(String source);
-    SourceResponse deleteSource(String source);
+    SourceDTO updateSource(SourceDTO sourceDTO, Long id);
+    SourceDTO deleteSource(Long id);
 
 }

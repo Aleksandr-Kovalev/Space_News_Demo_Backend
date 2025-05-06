@@ -30,4 +30,5 @@ public class Source {
 
     @OneToMany(mappedBy = "source", cascade = CascadeType.ALL)
     private List<Post> posts;
+
 }
