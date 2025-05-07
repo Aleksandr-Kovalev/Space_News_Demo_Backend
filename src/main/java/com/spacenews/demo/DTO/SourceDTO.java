@@ -1,12 +1,11 @@
 package com.spacenews.demo.DTO;
 
-import com.spacenews.demo.model.Post;
+import com.spacenews.demo.model.SourceType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -17,4 +16,5 @@ public class SourceDTO {
     private String url;
     private String homepageUrl;
     private LocalDateTime createdAt;
+    private SourceType type;
 }

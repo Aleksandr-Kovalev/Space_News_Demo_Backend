@@ -43,7 +43,9 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public SourceDTO addSource(SourceDTO sourceDTO) {
 
+        System.out.println("DTO source type before mapping:" + sourceDTO.getType());
         Source source = modelMapper.map(sourceDTO, Source.class);
+        System.out.println("DTO source type after mapping:" + sourceDTO.getType());
         Source sourceFromDB = sourceRepository.findByUrl(sourceDTO.getUrl());
 
         if (sourceFromDB != null) {
@@ -59,18 +61,20 @@ public class SourceServiceImpl implements SourceService {
     @Override
     public SourceDTO updateSource(SourceDTO sourceDTO, Long id) {
 
-        sourceRepository.findById(id)
+        Source existingSource = sourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Source", "id", id));
 
-        Source newSource = modelMapper.map(sourceDTO, Source.class);
-        newSource.setId(id);
-        Source updatedSource = sourceRepository.save(newSource);
+        existingSource.setName(sourceDTO.getName());
+        existingSource.setUrl(sourceDTO.getUrl());
+        existingSource.setHomepageUrl(sourceDTO.getHomepageUrl());
 
+        Source updatedSource = sourceRepository.save(existingSource);
         return modelMapper.map(updatedSource, SourceDTO.class);
     }
 
     @Override
     public SourceDTO deleteSource(Long id) {
+
         Source source = sourceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Source", "id", id));
         sourceRepository.delete(source);

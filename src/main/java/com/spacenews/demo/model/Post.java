@@ -1,6 +1,7 @@
 package com.spacenews.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ public class Post {
     private Source source;
 
     @Enumerated(EnumType.STRING)
+    @NotNull(message = "Post type is required")
     private PostType type;
 
     private String title;

@@ -31,7 +31,7 @@ public class SourceController {
     @PutMapping("/sources/{id}")
     public ResponseEntity<SourceDTO> updateSource(@RequestBody SourceDTO sourceDTO,
                                                   @PathVariable Long id) {
-        SourceDTO savedSourceDTO = sourceService.updateSource(sourceDTO, sourceDTO.getId());
+        SourceDTO savedSourceDTO = sourceService.updateSource(sourceDTO, id);
         return new ResponseEntity<>(savedSourceDTO, HttpStatus.OK);
     }
 
@@ -41,6 +41,5 @@ public class SourceController {
         CustomResponse<SourceDTO> response = new CustomResponse<>("Source deleted successfully", deletedSource);
         return ResponseEntity.ok(response);
     }
-
 
 }
