@@ -1,5 +1,7 @@
 package com.spacenews.demo.serviceImpl;
 
+import com.rometools.rome.feed.synd.SyndContent;
+import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
@@ -14,11 +16,13 @@ import com.spacenews.demo.repositories.SourceRepository;
 import com.spacenews.demo.service.PostService;
 import com.spacenews.demo.service.RssFetchService;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -57,6 +61,8 @@ public class RssFetchServiceImpl implements RssFetchService {
 
     }
 
+    //Rome Tool Documentation
+    //https://rometools.github.io/rome/index.html
     private List<Post> parseRssFeeds(Source source) {
 
         System.out.println("Parsing rss feeds from source: " + source.getName());
@@ -83,6 +89,7 @@ public class RssFetchServiceImpl implements RssFetchService {
             post.setFetchedAt(LocalDateTime.now());
             post.setSource(source);
             post.setType(PostType.RSS);
+            post.setImageUrl(parseRSSFeedForImages(entry)); //parse for image url
             newPosts.add(post);
         }
 
@@ -90,5 +97,53 @@ public class RssFetchServiceImpl implements RssFetchService {
 
         return newPosts;
 
+    }
+
+    private String parseRSSFeedForImages(SyndEntry entry) {
+
+        String imageUrl = "";
+
+        // 1. Check enclosures for image
+        List<SyndEnclosure> enclosures = entry.getEnclosures();
+        for (SyndEnclosure enclosure : enclosures) {
+            if (enclosure.getType() != null && enclosure.getType().startsWith("image")) {
+                imageUrl = enclosure.getUrl();
+                System.out.println("Image found in enclosure: " + imageUrl);
+                break;
+            }
+        }
+
+        // 2. Check description for <img>
+        if (imageUrl.isEmpty() && entry.getDescription() != null) {
+            imageUrl = extractImageFromHtml(entry.getDescription().getValue());
+            if (!imageUrl.isEmpty()) {
+                System.out.println("Image found in description: " + imageUrl);
+            }
+        }
+
+        // 3. Check contents for <img>
+        if (imageUrl.isEmpty() && entry.getContents() != null) {
+            for (SyndContent content : entry.getContents()) {
+                imageUrl = extractImageFromHtml(content.getValue());
+                if (!imageUrl.isEmpty()) {
+                    System.out.println("Image found in content: " + imageUrl);
+                    break;
+                }
+            }
+        }
+
+        // 4. Fallback to default
+        if (imageUrl.isEmpty()) {
+            imageUrl = "placeholder";  // Replace with your default
+            System.out.println("No image found. Using default: " + imageUrl);
+        }
+
+        return imageUrl;
+    }
+
+    private String extractImageFromHtml(String html) {
+        Document doc = Jsoup.parse(html);
+        Element img = doc.selectFirst("img");
+        return img != null ? img.attr("src") : "";
     }
 }

@@ -39,9 +39,9 @@ public class PostServiceImpl implements PostService {
 
         Post post = modelMapper.map(postDTO, Post.class);
         post.setSource(source);
-        Post postFromDB = postRepository.findBylink(post.getLink());
+        boolean exists = postRepository.existsByLink(post.getLink());
 
-        if(postFromDB != null) {
+        if(exists) {
             throw new APIException("Post already exists");
         }
 
@@ -63,6 +63,7 @@ public class PostServiceImpl implements PostService {
         existingPost.setPublishedAt(postDTO.getPublishedAt());
         existingPost.setLink(postDTO.getLink());
         existingPost.setContent(postDTO.getContent());
+        existingPost.setImageUrl(postDTO.getImageUrl());
         existingPost.setCategory(postDTO.getCategory());
         existingPost.setLocObject(postDTO.getLocObject());
 

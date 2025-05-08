@@ -19,6 +19,7 @@ public class PostDTO {
     private LocalDateTime publishedAt;
     private String link;
     private String content;
+    private String imageUrl;
     private String category;
     private String locObject;
 }

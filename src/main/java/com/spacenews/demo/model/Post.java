@@ -30,10 +30,14 @@ public class Post {
     private LocalDateTime publishedAt;
     private LocalDateTime fetchedAt;
 
+    @Column(length = 1000)
     private String link;
 
     @Column(columnDefinition = "TEXT")
     private String content;
+
+    @Column(length = 1000)
+    private String imageUrl;
 
     private String category;
     private String locObject;

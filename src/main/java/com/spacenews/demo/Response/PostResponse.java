@@ -21,6 +21,7 @@ public class PostResponse {
     private LocalDateTime fetchedDate;
     private String link;
     private String content;
+    private String imageUrl;
     private String category;
     private String locObject;
 }
