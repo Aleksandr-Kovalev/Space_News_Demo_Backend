@@ -144,6 +144,6 @@ public class RssFetchServiceImpl implements RssFetchService {
     private String extractImageFromHtml(String html) {
         Document doc = Jsoup.parse(html);
         Element img = doc.selectFirst("img");
-        return img != null ? img.attr("src") : "";
+        return img != null ? img.attr("src") : "https://raw.githubusercontent.com/Aleksandr-Kovalev/Space_News_Demo_Backend/refs/heads/master/Images/defualt%20image%20scifi%20stylized.png";
     }
 }
